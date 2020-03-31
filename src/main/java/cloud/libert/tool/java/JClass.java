@@ -1,6 +1,6 @@
 package cloud.libert.tool.java;
 
-import cloud.libert.tool.OperatorException;
+import cloud.libert.tool.LibertToolException;
 import cloud.libert.tool.core.Formats;
 import cloud.libert.tool.util.RegExpr;
 import cloud.libert.tool.core.ILineReader;
@@ -41,7 +41,7 @@ public class JClass implements ILineReader {
 	private BufferedReader mBr = null;
 	public static final RegExpr RE = new RegExpr("^public +(static +)?(final +)?class +(\\w+)");
 
-	public JClass(String path) throws OperatorException {
+	public JClass(String path) throws LibertToolException {
 		mCodeFilePath = path;
 		File file = new File(path);
 		fileDescs = new ArrayList<JDesc>();
@@ -58,7 +58,7 @@ public class JClass implements ILineReader {
 				mBr = new BufferedReader(new FileReader(file));
 				tryParse();
 			} catch (Exception e) {
-				throw new OperatorException("Parse error: " + e.getMessage());
+				throw new LibertToolException("Parse error: " + e.getMessage());
 			} finally {
 				if(mBr != null) {
 					try {
@@ -199,7 +199,7 @@ public class JClass implements ILineReader {
 		}
 	}
 	
-	public void writeToFile(String path) throws OperatorException {
+	public void writeToFile(String path) throws LibertToolException {
 		BufferedWriter bw = null;
 		try {
 			File file = new File(path);
@@ -235,7 +235,7 @@ public class JClass implements ILineReader {
 			bw.write("}");
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new OperatorException(e);
+			throw new LibertToolException(e);
 		} finally {
 			if(bw != null) {
 				try {

@@ -2,7 +2,7 @@ package cloud.libert.tool.java;
 
 
 import cloud.libert.tool.LibertToolContext;
-import cloud.libert.tool.OperatorException;
+import cloud.libert.tool.LibertToolException;
 import cloud.libert.tool.core.Formats;
 
 import java.io.BufferedWriter;
@@ -13,7 +13,7 @@ import java.util.Map;
 public class JClassEntity extends JClass {
 	LibertToolContext context;
 
-	public JClassEntity(LibertToolContext context, String path) throws OperatorException {
+	public JClassEntity(LibertToolContext context, String path) throws LibertToolException {
 		super(path);
 		this.context = context;
 	}
@@ -58,7 +58,7 @@ public class JClassEntity extends JClass {
 		}
 	}
 
-	public void save() throws OperatorException {
+	public void save() throws LibertToolException {
 		boolean hasJSONFieldAnno = false;
 		for(String im : mImports) {
 			if(im.endsWith(".JSONField")) {

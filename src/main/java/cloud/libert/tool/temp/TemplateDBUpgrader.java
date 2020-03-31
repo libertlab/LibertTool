@@ -1,7 +1,7 @@
 package cloud.libert.tool.temp;
 
 import cloud.libert.tool.LibertToolContext;
-import cloud.libert.tool.OperatorException;
+import cloud.libert.tool.LibertToolException;
 import cloud.libert.tool.java.JClass;
 import cloud.libert.tool.java.JMethod;
 
@@ -46,7 +46,7 @@ public class TemplateDBUpgrader {
         }
     }
 
-    public static void save(LibertToolContext ctx) throws OperatorException {
+    public static void save(LibertToolContext ctx) throws LibertToolException {
         String path = ctx.getDBPath() + NAME + ".java";
         JClass parser = new JClass(path);
         if (parser.loadedFromFile) {
@@ -59,7 +59,7 @@ public class TemplateDBUpgrader {
         }
     }
 
-    private static boolean upgrade(JClass parser) throws OperatorException {
+    private static boolean upgrade(JClass parser) throws LibertToolException {
         JMethod processMethod = null;
         int proMethodIndex = -1;
         for(int i=0;i<parser.methods.size();i++) {

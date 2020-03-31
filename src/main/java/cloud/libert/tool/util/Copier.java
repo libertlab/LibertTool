@@ -3,7 +3,7 @@ package cloud.libert.tool.util;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeepCopier {
+public class Copier {
 
     public static Map<String, String> clone(Map<String, String> map) {
         Map<String, String> rt = null;

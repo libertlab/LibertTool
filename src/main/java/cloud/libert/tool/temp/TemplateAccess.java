@@ -1,6 +1,6 @@
 package cloud.libert.tool.temp;
 
-import cloud.libert.tool.OperatorException;
+import cloud.libert.tool.LibertToolException;
 import cloud.libert.tool.core.Formats;
 import cloud.libert.tool.LibertToolContext;
 import cloud.libert.tool.java.*;
@@ -14,7 +14,7 @@ public class TemplateAccess {
 	JClass parser;
 	JClassEntity entity;
 
-	public TemplateAccess(LibertToolContext ctx, JClassEntity entity) throws OperatorException {
+	public TemplateAccess(LibertToolContext ctx, JClassEntity entity) throws LibertToolException {
 		context = ctx;
 		this.entity = entity;
 		entityName = entity.name;
@@ -30,7 +30,7 @@ public class TemplateAccess {
 		}
 	}
 
-	public void save() throws OperatorException {
+	public void save() throws LibertToolException {
 		parser.writeToFile(selfPath);
 		String tip = "  created.";
 		if(parser.loadedFromFile) {
@@ -82,14 +82,14 @@ public class TemplateAccess {
 				contructor.appendBodyLine("        fieldsMap.put("+keyName+", \""+jf.name+"\");");
 			}
 		}
-		contructor.appendBodyLine("        otherInit();");
+		contructor.appendBodyLine("        init();");
 
 		parser.addOrUpdateMethod(contructor);
 		parser.addOrUpdateMethod(createSelfMethod());
 	}
 
 	private JMethod createOtherInitMethod() {
-		JMethod jm = new JMethod("private void otherInit() {");
+		JMethod jm = new JMethod("private void init() {");
 		return jm;
 	}
 

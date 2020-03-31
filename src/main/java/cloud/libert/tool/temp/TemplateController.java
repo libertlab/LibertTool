@@ -1,7 +1,7 @@
 package cloud.libert.tool.temp;
 
 import cloud.libert.tool.LibertToolContext;
-import cloud.libert.tool.OperatorException;
+import cloud.libert.tool.LibertToolException;
 import cloud.libert.tool.core.Formats;
 import cloud.libert.tool.util.Strings;
 import cloud.libert.tool.java.*;
@@ -21,7 +21,7 @@ public class TemplateController {
     String selfPath;
     JClass parser;
 
-    public TemplateController(LibertToolContext ctx, JInterface jInterface) throws OperatorException {
+    public TemplateController(LibertToolContext ctx, JInterface jInterface) throws LibertToolException {
         interfaceName = jInterface.name;
         this.context = ctx;
         this.jInterface = jInterface;
@@ -40,7 +40,7 @@ public class TemplateController {
     }
 
 
-    public void save() throws OperatorException {
+    public void save() throws LibertToolException {
         parser.writeToFile(selfPath);
         String tip = "  created.";
         if(parser.loadedFromFile) {

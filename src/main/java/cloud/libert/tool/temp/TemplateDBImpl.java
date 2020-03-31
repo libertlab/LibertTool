@@ -1,7 +1,7 @@
 package cloud.libert.tool.temp;
 
 import cloud.libert.tool.LibertToolContext;
-import cloud.libert.tool.OperatorException;
+import cloud.libert.tool.LibertToolException;
 import cloud.libert.tool.java.JClass;
 import cloud.libert.tool.java.JClassEntity;
 import cloud.libert.tool.java.JField;
@@ -19,7 +19,7 @@ public class TemplateDBImpl {
     boolean upgradeDb = false;
     int dbVersion = 1;
 
-    public TemplateDBImpl(LibertToolContext ctx, boolean upgradeDb) throws OperatorException {
+    public TemplateDBImpl(LibertToolContext ctx, boolean upgradeDb) throws LibertToolException {
         context = ctx;
         this.upgradeDb = upgradeDb;
         selfPath = ctx.getDBPath() + selfName + ".java";
@@ -40,13 +40,13 @@ public class TemplateDBImpl {
                 }
             }
         } else {
-            throw new OperatorException("File not found: " + selfPath);
+            throw new LibertToolException("File not found: " + selfPath);
         }
         if (jmCreateTable == null) {
-            throw new OperatorException("Cannot find member method: " + selfName + ".createTable(Statement stat)");
+            throw new LibertToolException("Cannot find member method: " + selfName + ".createTable(Statement stat)");
         }
         if (jfDBVersion == null) {
-            throw new OperatorException("Cannot find member field: " + selfName + ".dbVersion");
+            throw new LibertToolException("Cannot find member field: " + selfName + ".dbVersion");
         }
     }
 
@@ -75,7 +75,7 @@ public class TemplateDBImpl {
         }
     }
 
-    public void save() throws OperatorException {
+    public void save() throws LibertToolException {
         if (upgradeDb) {
             TemplateDBUpgrader.save(context);
             //更新版本号

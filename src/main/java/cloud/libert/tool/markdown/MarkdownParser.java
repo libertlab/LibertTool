@@ -1,6 +1,6 @@
 package cloud.libert.tool.markdown;
 
-import cloud.libert.tool.OperatorException;
+import cloud.libert.tool.LibertToolException;
 import cloud.libert.tool.core.ILineReader;
 
 import java.io.*;
@@ -10,15 +10,15 @@ public class MarkdownParser implements ILineReader {
     public BufferedReader bufferedReader;
     private String path;
 
-    public MarkdownParser(File file) throws OperatorException {
+    public MarkdownParser(File file) throws LibertToolException {
         path = file.getAbsolutePath();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             bufferedReader = br;
             parse();
         } catch (FileNotFoundException e) {
-            throw new OperatorException("File not found: " + path);
+            throw new LibertToolException("File not found: " + path);
         } catch (IOException e) {
-            throw new OperatorException(e);
+            throw new LibertToolException(e);
         }
     }
 

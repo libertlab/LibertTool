@@ -1,7 +1,7 @@
 package cloud.libert.tool.temp;
 
 import cloud.libert.tool.LibertToolContext;
-import cloud.libert.tool.OperatorException;
+import cloud.libert.tool.LibertToolException;
 import cloud.libert.tool.core.Formats;
 import cloud.libert.tool.util.Strings;
 import cloud.libert.tool.java.JInterface;
@@ -33,7 +33,7 @@ public class TemplateInterfaceDocument {
     String onlineEnvUrl = "";
     String version = "V1.0";
 
-    public TemplateInterfaceDocument(LibertToolContext ctx, JInterface jInterface) throws OperatorException {
+    public TemplateInterfaceDocument(LibertToolContext ctx, JInterface jInterface) throws LibertToolException {
         interfaceName = jInterface.name;
         this.context = ctx;
         this.jInterface = jInterface;
@@ -47,7 +47,7 @@ public class TemplateInterfaceDocument {
         return selfPath;
     }
 
-    public void save() throws OperatorException {
+    public void save() throws LibertToolException {
         boolean isUpdate = false;
 
         BufferedWriter bw = null;
@@ -70,7 +70,7 @@ public class TemplateInterfaceDocument {
             writeInterfaceMethodDocument(bw);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new OperatorException(e);
+            throw new LibertToolException(e);
         } finally {
             if (bw != null) {
                 try {

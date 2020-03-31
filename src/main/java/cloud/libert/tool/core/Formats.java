@@ -2,7 +2,7 @@ package cloud.libert.tool.core;
 
 
 public final class Formats {
-    public static final String ENTITY_ID = "mId";
+    public static final String ENTITY_ID = "id";
     public static final String TABLE_ID = "_id";
     public static final String NL = "\r\n";
     public static final String NL2 = "\r\n\r\n";
@@ -17,8 +17,8 @@ public final class Formats {
 
     public static String strip(String src) {
         int len = src.length();
-        if(len>=2 && src.charAt(0) == '"' && src.charAt(len-1)=='"') {
-            return src.substring(1,src.length()-1);
+        if (len >= 2 && src.charAt(0) == '"' && src.charAt(len - 1) == '"') {
+            return src.substring(1, src.length() - 1);
         } else {
             return src;
         }
@@ -26,15 +26,15 @@ public final class Formats {
 
     public static int[] charCount(String src, char... chars) {
         int[] rt = new int[chars.length];
-        for(int i=0;i<rt.length;i++) {
+        for (int i = 0; i < rt.length; i++) {
             rt[i] = 0;
         }
         char[] arr = src.toCharArray();
         char one;
-        for(int i=0;i<arr.length;i++) {
+        for (int i = 0; i < arr.length; i++) {
             one = arr[i];
-            for(int j=0;j<chars.length;j++) {
-                if(one == chars[j]) {
+            for (int j = 0; j < chars.length; j++) {
+                if (one == chars[j]) {
                     rt[j]++;
                     break;
                 }
@@ -45,25 +45,37 @@ public final class Formats {
 
     public static void main(String[] args) {
         int[] counts = charCount("abc(xxx(t)))z", '(', ')');
+        System.out.println(toTableFieldName("id"));
         System.out.println(toTableFieldName("userName"));
         System.out.println(toTableFieldName("mUserName"));
         System.out.println(toTableFieldName("mUserPPPsName"));
         System.out.println(toTableFieldName("name"));
         System.out.println("-------------");
 
-//        System.out.println(toEntityFieldName("user_name"));
-//        System.out.println(toEntityFieldName("user_name"));
-//        System.out.println(toEntityFieldName("_user_ppps_name"));
-//        System.out.println(toEntityFieldName("name"));
-        
+        System.out.println(toEntityFieldName("_user_name"));
+        System.out.println(toEntityFieldName("_user_name"));
+        System.out.println(toEntityFieldName("_user_ppps_name"));
+        System.out.println(toEntityFieldName("name"));
+        System.out.println("-------------");
+
+        System.out.println(toEntityFieldName("_user_name", (byte) 'm'));
+        System.out.println(toEntityFieldName("_user_name", (byte) 'm'));
+        System.out.println(toEntityFieldName("_user_ppps_name", (byte) 'm'));
+        System.out.println(toEntityFieldName("name", (byte)'m'));
+        System.out.println("-------------");
+
+        System.out.println(forShort("name"));
+        System.out.println(forShort("userName"));
+        System.out.println(forShort("mUserName"));
+
         System.out.println("end");
     }
 
     public static String forShort(String name) {
-        if(ENTITY_ID.equals(name) || TABLE_ID.equals("name")) {
+        if (ENTITY_ID.equals(name) || TABLE_ID.equals("name")) {
             return "id";
         }
-        byte[]buf = new byte[name.length()];
+        byte[] buf = new byte[name.length()];
         int p = 0;
         boolean upper = true;
         boolean first = true;
@@ -71,18 +83,18 @@ public final class Formats {
         int start = name.charAt(0) == 'm' ? 1 : 0;
         for (int i = start; i < name.length(); i++) {
             c = name.charAt(i);
-            if(c == '_') {
+            if (c == '_') {
                 upper = true;
                 first = true;
-            } else if(c >= 'A' && c <= 'Z') {
-                if(upper || first) {
-                    buf[p++] = (byte)(c+32);
+            } else if (c >= 'A' && c <= 'Z') {
+                if (upper || first) {
+                    buf[p++] = (byte) (c + 32);
                 }
                 upper = false;
                 first = false;
             } else {
-                if(upper) {
-                    buf[p++] = (byte)c;
+                if (upper) {
+                    buf[p++] = (byte) c;
                     upper = false;
                 }
                 first = true;
@@ -94,45 +106,77 @@ public final class Formats {
 
     public static String toTableFieldName(String name) {
         char c;
-		boolean first = true;
-		byte[] buf = new byte[name.length() + 10];
-		int p = 0;
-		for (int i = 0; i < name.length(); i++) {
-			c = name.charAt(i);
-			if (i == 0 && c == 'm') {
-
-			} else if (c >= 'A' && c <= 'Z') {
-				if (first) {
-					buf[p++] = '_';
-					first = false;
-				}
-				buf[p++] = (byte) (c + 32);
-			} else {
-				first = true;
-				buf[p++] = (byte) c;
-			}
-		}
+        boolean first = true;
+        byte[] buf = new byte[name.length() + 10];
+        int p = 0;
+        int start = 0;
+        buf[p++] = '_';
+        if (name.length() > 0 && name.charAt(0) == 'm') {
+            start = 1;
+            first = false;
+        }
+        for (int i = start; i < name.length(); i++) {
+            c = name.charAt(i);
+            if (c >= 'A' && c <= 'Z') {
+                if (first) {
+                    buf[p++] = '_';
+                    first = false;
+                }
+                buf[p++] = (byte) (c + 32);
+            } else {
+                first = true;
+                buf[p++] = (byte) c;
+            }
+        }
         return new String(buf, 0, p);
     }
 
     public static String toEntityFieldName(String name) {
+        assert name.length() > 0;
         char c;
-		boolean upper = true;
-		byte[] buf = new byte[name.length()+1];
-		int p = 0;
-        buf[p++] = 'm';
-		for (int i = 0; i < name.length(); i++) {
-			c = name.charAt(i);
-			if (c == '_') {
+        boolean upper = true;
+        byte[] buf = new byte[name.length() + 1];
+        int p = 0;
+        for (int i = 0; i < name.length(); i++) {
+            c = name.charAt(i);
+            if (c == '_') {
                 upper = true;
-			} else {
+            } else {
                 if (upper && c >= 'a' && c <= 'z') {
                     c -= 32;
                 }
                 buf[p++] = (byte) c;
                 upper = false;
             }
-		}
+        }
+
+        byte c0 = buf[0];
+        if (c0 >= 'A' && c0 <= 'Z') {
+            buf[0] = (byte) (c0 + 32);
+        }
+        return new String(buf, 0, p);
+    }
+
+    public static String toEntityFieldName(String name, byte prefix) {
+        char c;
+        boolean upper = true;
+        byte[] buf = new byte[name.length() + 1];
+        int p = 0;
+        buf[p++] = prefix;
+        for (int i = 0; i < name.length(); i++) {
+            c = name.charAt(i);
+            if (c == '_') {
+                if (i > 0) {
+                    upper = true;
+                }
+            } else {
+                if (upper && c >= 'a' && c <= 'z') {
+                    c -= 32;
+                }
+                buf[p++] = (byte) c;
+                upper = false;
+            }
+        }
         return new String(buf, 0, p);
     }
 
@@ -167,7 +211,7 @@ public final class Formats {
             if (c == '_') {
                 upper = true;
             } else {
-                if(upper && c>='a' && c<='z') {
+                if (upper && c >= 'a' && c <= 'z') {
                     c -= 32;
                 }
                 buf[p++] = (byte) c;

@@ -1,6 +1,6 @@
 package cloud.libert.tool.java;
 
-import cloud.libert.tool.util.DeepCopier;
+import cloud.libert.tool.util.Copier;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -172,7 +172,7 @@ public class MetaAnno {
         }
 
         public MetaAnnoItem copy() {
-            return new MetaAnnoItem(name, DeepCopier.clone(values), order);
+            return new MetaAnnoItem(name, Copier.clone(values), order);
         }
 
         public MetaAnnoItem(String anno) {

@@ -25,11 +25,11 @@ public class LibertTool {
     boolean createDoc = true;
     ILibertToolCallback callback = ILibertToolCallback.DefalutImpl;
 
-    public LibertTool(LibertToolContext ctx) throws OperatorException {
+    public LibertTool(LibertToolContext ctx) throws LibertToolException {
         this(ctx, false, true);
     }
 
-    public LibertTool(LibertToolContext ctx, boolean upgradeDatabase, boolean createDocument) throws OperatorException {
+    public LibertTool(LibertToolContext ctx, boolean upgradeDatabase, boolean createDocument) throws LibertToolException {
         System.out.println(lineDividerBegin);
         System.out.println("> LiberTool@" + VERSION + " preparing ...");
         upgradeDB = upgradeDatabase;
@@ -65,19 +65,19 @@ public class LibertTool {
         return VERSION;
     }
 
-    public void addEntity(String... entityNames) throws OperatorException {
+    public void addEntity(String... entityNames) throws LibertToolException {
         for (int i = 0; i < entityNames.length; i++) {
             addEntity(entityNames[i]);
         }
     }
 
-    public void addEntity(List<String> entityNames) throws OperatorException {
+    public void addEntity(List<String> entityNames) throws LibertToolException {
         for (String entityName : entityNames) {
             addEntity(entityName);
         }
     }
 
-    public void addEntity(String entityName) throws OperatorException {
+    public void addEntity(String entityName) throws LibertToolException {
         JClassEntity entity = new JClassEntity(context, context.getEntityPath() + entityName + ".java");
         if (entity.name == null) {
             entity.name = entityName;
@@ -88,7 +88,7 @@ public class LibertTool {
         callback.onAddEntity(entity);
     }
 
-    public void addInterface(String interfaceName) throws OperatorException {
+    public void addInterface(String interfaceName) throws LibertToolException {
         JInterface jInterface = new JInterface(context.getInterfacesPath() + interfaceName + ".java");
         tempServiceList.add(new TemplateService(context, jInterface));
         tempControllerList.add(new TemplateController(context, jInterface));
@@ -99,7 +99,7 @@ public class LibertTool {
     }
 
 
-    public void save() throws OperatorException {
+    public void save() throws LibertToolException {
         tempDBCreatorImpl.save();
         System.out.println(lineDivider);
         for (JClassEntity jEntity : entityList) {
@@ -130,15 +130,15 @@ public class LibertTool {
         callback.onStart();
     }
 
-    public static void main(String[] args) throws OperatorException {
-//        LibertToolContext ctx = new LibertToolContext("D:/dev/java/work/jxm_web2020/src/main/", "com.jxm.web");
-        LibertToolContext ctx = new LibertToolContext("D:/test/LibertTool/", "com");
+    public static void main(String[] args) throws LibertToolException {
+        LibertToolContext ctx = new LibertToolContext("D:/dev/java/work/jxm_web2020/src/main/", "com.jxm.web");
+//        LibertToolContext ctx = new LibertToolContext("D:/test/LibertTool/", "com");
         LibertTool tool = new LibertTool(ctx, false, true);
-        tool.addEntity("KeyValue");
-//        tool.addEntity("JxmCase");
+//        tool.addEntity("KeyValue");
 //        tool.addEntity("CaseIndustry");
 //        tool.addEntity("CaseScene");
 //        tool.addEntity("CaseWords");
+        tool.addEntity("JxmCase");
 //        tool.addInterface("ICaseService");
 //        tool.addInterface("IDataService");
         tool.save();

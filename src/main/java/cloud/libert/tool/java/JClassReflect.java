@@ -1,7 +1,7 @@
 package cloud.libert.tool.java;
 
 
-import cloud.libert.tool.OperatorException;
+import cloud.libert.tool.LibertToolException;
 
 import java.util.Arrays;
 
@@ -33,7 +33,7 @@ public class JClassReflect {
     }
 
 
-    public static void main(String[] args) throws OperatorException {
+    public static void main(String[] args) throws LibertToolException {
         String path = "D:/dev/java/work/jxm_web2020/src/main/java/com/jxm/web/db/ORMMapImpl.java";
         JClass parser = new JClass(path);
 
