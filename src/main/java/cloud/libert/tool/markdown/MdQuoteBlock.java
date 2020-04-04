@@ -2,13 +2,14 @@ package cloud.libert.tool.markdown;
 
 import cloud.libert.tool.core.Formats;
 import cloud.libert.tool.core.ILineReader;
+import cloud.libert.tool.util.Strings;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MdQuoteBlock implements IMarkdownMeta {
+public class MdQuoteBlock implements IMdMeta {
     private static final String PREFIX = "> ";
     private String startLine;
     private List<String> otherLines;
@@ -20,7 +21,7 @@ public class MdQuoteBlock implements IMarkdownMeta {
             meta.startLine = line;
             for (; ; ) {
                 line = reader.next(true);
-                if (line == null || "".equals(line)) {
+                if (line == null || reader.passEmptyLine()) {
                     break;
                 }
                 meta.otherLines.add(line);
@@ -33,10 +34,8 @@ public class MdQuoteBlock implements IMarkdownMeta {
 
     @Override
     public void writeTo(BufferedWriter bw) throws IOException {
-        bw.write(Formats.NL);
-        bw.write(PREFIX);
-        bw.write(startLine+ Formats.NL);
-        for(String line : otherLines) {
+        bw.write(startLine + Formats.NL);
+        for (String line : otherLines) {
             bw.write(line + Formats.NL);
         }
         bw.write(Formats.NL);
@@ -45,5 +44,27 @@ public class MdQuoteBlock implements IMarkdownMeta {
     @Override
     public int getType() {
         return TYPE_QUOTE_BLOCK;
+    }
+
+    @Override
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder(256);
+        sb.append("<div class=\"lib-quote\">");
+        buildHtmlTo(sb, startLine.substring(2).trim());
+        for(String line : otherLines) {
+            buildHtmlTo(sb, line.substring(1).trim());
+        }
+        sb.append("</div>");
+        return sb.toString();
+    }
+
+    private void buildHtmlTo(StringBuilder sb, String line) {
+        if(line.length()==0) {
+            sb.append("<br>");
+        } else {
+            sb.append("<p>");
+            new MdTextHandler(line).buildTo(sb);
+            sb.append("</p>");
+        }
     }
 }
