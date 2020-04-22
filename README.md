@@ -4,9 +4,11 @@
 
 `LibertTool`是`Libert`框架配套的开发辅助工具（含有代码生成、接口文档生成、部署）。
 
-网址（Sorry，网站正在筹备中，暂时无法访问...）： http://www.libert.cloud/
+网址（正在筹备中...）： http://www.libert.cloud/
 
 > Libert是一个库（`Libert`）和工具（`LibertTool`），也是一套Web开发的约定和规范，囊括了Java Web开发中大部分最佳实践，用于加速基于`SpringBoot`的Web项目开发。在`SpringBoot`强大的框架和生态能力之上，配合`LibertTool`代码生成工具，将极大地提升开发效率。
+>
+> 与`Lombok`不同的是，**`LibertTool`是无侵入性的代码生成**，所有生成的代码可读性强，可以手动修改（规模开发的情况下，不建议手动修改）。
 
 Libert是一个Java语言实现的Web项目开发库和框架，基于 `JDK1.8`、`JUnit5`、`Maven`构建，提供数据库`ORM`、代码生成、表结构维护的库和工具。方便地和`SpringBoot`，或者传统项目进行集成（可选依赖`@FastJSON`）。
 
@@ -14,6 +16,7 @@ Libert是一个Java语言实现的Web项目开发库和框架，基于 `JDK1.8`�
 2. 基于`java`实体（`entity`）的`ORM`支持。快速生成数据访问层Access。
 3. 基于`java`接口（`interface`），快速建立符合`SpringBoot`规范的`Controller`、`Service`，以及接口定义文档（供前端和测试使用）。
 4. **在`Libert`库和`LibertTool`工具的支持下，基于`SpringBoot`的服务开发将变得简单、高效、极速**。
+5. 借助Spring生态的强大能力，轻松集成Spring Cloud。
 
 ### 2. 功能清单
 
@@ -277,7 +280,7 @@ public class LibertToolTest {
 
    1. 更新~~或新增~~`com/your-package/db/entity/KeyValue.java`文件，添加给每个字段添加`@JSONField`注解；
    2. 更新或新增`com/your-package/db/DBInitializer.java`文件，这是向`Mysql`数据库插入初始数据的地方。
-   3. 更新或新增`com/your-package/db/DBImpl.java`文件，这是向`Mysql`数据库建表语句的实现。
+   3. 更新或新增`com/your-package/db/DBImpl.java`文件，这是`Mysql`数据库建表语句的实现。
    4. 更新或新增`com/your-package/db/DBUpgrader.java`文件，这是`Mysql`数据库升级相关实现。**前提是`new LibertTool`的时候，第二个参数`upgradeDatabase`传入`true`，否则，默认不新增或更新`DBUpgrader.java`文件**。
    5. 更新或新增`com/your-package/db/access/KeyValueAccess.java`文件，这是数据访问层的实现。
 
